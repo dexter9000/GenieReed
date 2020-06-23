@@ -138,7 +138,7 @@
           <bool>true</bool>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_comp">
           <attribute name="title">
@@ -152,7 +152,7 @@
          </widget>
          <widget class="QWidget" name="tab_simple">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <attribute name="title">
            <string>Basic</string>
@@ -175,7 +175,7 @@
                 <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
-                <widget class="QWidget" name="scrollAreaWidgetContents">
+                <widget class="QWidget" name="field_group">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
@@ -184,7 +184,7 @@
                    <height>99</height>
                   </rect>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <layout class="QFormLayout" name="formLayout_3">
                   <property name="leftMargin">
                    <number>0</number>
                   </property>
@@ -197,7 +197,7 @@
                   <property name="bottomMargin">
                    <number>0</number>
                   </property>
-                  <item>
+                  <item row="0" column="0" colspan="2">
                    <layout class="QHBoxLayout" name="field_query_line">
                     <item alignment="Qt::AlignTop">
                      <widget class="QComboBox" name="comboBox">
@@ -317,8 +317,8 @@
                <widget class="QComboBox" name="combo_exculde"/>
               </item>
               <item row="5" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
-                <item>
+               <layout class="QFormLayout" name="formLayout_2">
+                <item row="0" column="0">
                  <widget class="QComboBox" name="combo_sort_type">
                   <property name="minimumSize">
                    <size>
@@ -344,7 +344,7 @@
                   </item>
                  </widget>
                 </item>
-                <item>
+                <item row="0" column="1">
                  <widget class="QComboBox" name="combo_sort"/>
                 </item>
                </layout>
@@ -417,6 +417,22 @@
            <property name="icon">
             <iconset resource="icon_rc.qrc">
              <normaloff>:/resources/icon/unlocked.png</normaloff>:/resources/icon/unlocked.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_ignore_null">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>None</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -520,7 +536,7 @@
           <item>
            <widget class="QTabWidget" name="tabs_result">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_table">
              <attribute name="title">
@@ -543,6 +559,27 @@
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
                <widget class="QTreeWidget" name="tree_result">
+                <property name="sortingEnabled">
+                 <bool>true</bool>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+                <attribute name="headerCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="headerMinimumSectionSize">
+                 <number>50</number>
+                </attribute>
+                <attribute name="headerDefaultSectionSize">
+                 <number>300</number>
+                </attribute>
+                <attribute name="headerHighlightSections">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="headerStretchLastSection">
+                 <bool>true</bool>
+                </attribute>
                 <column>
                  <property name="text">
                   <string notr="true">Key</string>
@@ -580,7 +617,14 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QTextBrowser" name="json_result"/>
+               <widget class="QTextBrowser" name="json_result">
+                <property name="font">
+                 <font>
+                  <family>Consolas</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>

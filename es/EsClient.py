@@ -5,6 +5,7 @@ import json
 class EsClient(object):
 
     def __init__(self):
+        self.version = '1'
         pass
 
     def open(self, ip, port):
@@ -20,13 +21,18 @@ class EsClient(object):
         self.openHost(host)
         print(self.es.info())
 
-
     def indices(self):
         indices = self.es.indices.get_alias()
         return indices.keys()
 
     def scheme(self, index):
-        return self.es.indices.get(index)[index]['mappings']
+        index_desc = self.es.indices.get(index)
+        result = index_desc[index]['mappings']
+        if 'properties' in result:
+            return result
+        else:
+            for m in result:
+                return result[m]
 
     def getHost(self):
         return self.hostname
@@ -44,23 +50,34 @@ class EsClient(object):
         result = []
         for f in properties:
             result.append(f)
+            if (f['type'] == 'nested'):
+                nested_list = self.getFieldNames(f['type']['properties'])
+                for n in nested_list:
+                    result.append(f + '.' + n)
         return result
 
     def search(self, index, query, page, size):
-        query['from'] = (page - 1) * size
-        if query['from'] > 10000:
-            query['from'] = 10000 - size
-        query['size'] = size
+        self.build_page_query(page, query, size)
         print(query)
 
         queryData = self.es.search(
             index=index,
             body=query)
+        print(queryData)
+
         self.total = queryData['hits']['total']
+        if (isinstance(self.total, dict)):      # ES 5.7版本变更
+            self.total = self.total['value']
         result = []
         for item in queryData['hits']['hits']:
             result.append(item['_source'])
         return result
+
+    def build_page_query(self, page, query, size):
+        query['from'] = (page - 1) * size
+        if query['from'] > 10000:
+            query['from'] = 10000 - size
+        query['size'] = size
 
     def ignoreNone(self, doc):
         if (isinstance(doc, list)):

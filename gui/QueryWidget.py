@@ -1,11 +1,12 @@
 import json
 import math
 
+from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QMenu, QAction
-from qtpy import QtWidgets
+from PyQt5.QtWidgets import QWidget, QMenu, QAction, QHeaderView
+from pyparsing import unicode
 
-from es import EsClient
+from gui.QueryField import QueryField
 from ui.ui_query_widget import Ui_QueryForm
 
 
@@ -30,6 +31,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.initAction()
         self.initQuery()
         self.lockTableResult()
+        self.isIgnoreNone = self.btn_ignore_null.isChecked()
 
     def initSetupUi(self):
         self.fieldNames = self.getFieldNames()
@@ -39,28 +41,29 @@ class QueryWidget(QWidget, Ui_QueryForm):
         # self.groupBox.add
         self.btn_pre_page.setEnabled(False)
         self.btn_next_page.setEnabled(False)
+        # self.tree_result.header().setResizeMode(QHeaderView.ResizeToContents)
+        self.initBasicQuery()
 
     def updateUi(self):
-        if(self.totalPage > self.page):
+        if (self.totalPage > self.page):
             self.btn_next_page.setEnabled(True)
         else:
             self.btn_next_page.setEnabled(False)
 
-        if(self.page > 1):
+        if (self.page > 1):
             self.btn_pre_page.setEnabled(True)
         else:
             self.btn_pre_page.setEnabled(False)
 
+    def initBasicQuery(self):
+        self.addField()
+
     def getFieldNames(self):
-        self.moduleName = []
-        for moduleName in self.pattern:
-            self.moduleName.append(moduleName)
-            result = []
-            self.properties = self.pattern[moduleName]['properties']
-            for f in self.properties:
-                result.append(f)
-            result = sorted(result, key=str.lower)
-        return result
+        result = []
+        self.properties = self.pattern['properties']
+        for f in self.properties:
+            result.append(f)
+        return sorted(result, key=str.lower)
 
     def initAction(self):
         self.btn_query.clicked.connect(self.search)
@@ -69,9 +72,26 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.table_result.doubleClicked.connect(self.openViewDocument)
         self.table_result.customContextMenuRequested.connect(self.docRightMenuShow)
         self.txt_page.editingFinished.connect(self.toPage)
+        self.btn_ignore_null.toggled.connect(self.ignoreNone)
+
+    def addField(self):
+        field_query_line = QueryField(self.fieldNames)
+        field_query_line.btn_add.clicked.connect(self.addField)
+        field_query_line.btn_del.clicked.connect(self.delField)
+        self.field_group_layout.addWidget(field_query_line)
+
+    def delField(self):
+        print("delField")
+        pass
+
+    def getQueryFields(self):
+        pass
+
+    def ignoreNone(self, ignore):
+        self.isIgnoreNone = ignore
 
     def initQuery(self):
-        query = '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"excludes":["cdp_field_weight"],"includes":["customerSID"]},"sort": [],"aggs": {}}'
+        query = '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"excludes":[]},"sort": [],"aggs": {}}'
         self.text_query.setPlainText(query)
 
     def addAllIndex(self, indexList):
@@ -80,8 +100,8 @@ class QueryWidget(QWidget, Ui_QueryForm):
     def search(self):
         query = json.loads(self.text_query.toPlainText())
         result = self.es.search(self.index, query, self.page, self.size)
-        self.addTreeResult(result)
         self.addTableResult(result)
+        self.addTreeResult(result)
         self.addJsonResult(result)
         self.label_total.setText(str(self.es.total))
         self.totalPage = math.ceil(self.es.total / self.size)
@@ -139,7 +159,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
         return result
 
     def addJsonResult(self, result):
-        self.json_result.setPlainText(json.dumps(result, sort_keys=True, indent=2))
+        self.json_result.setText(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
 
     def addQuery(self):
         pass
@@ -164,46 +184,46 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.tree_result.clear()
         for doc in result:
             tree = QtWidgets.QTreeWidgetItem(self.tree_result)
-            self.addTreeDoc(doc, tree)
-        print("")
+            self.addTreeRecord(doc, tree)
 
-    def addTreeDoc(self, doc, tree):
+    def addTreeRecord(self, doc, tree):
         if (isinstance(doc, dict)):
             tree.setText(0, "{doc}")
-            self.addTreeDict(doc, tree)
-        elif (isinstance(doc, list)):
-            i = 0
-            for item in doc:
-                self.addTreeDict(item, tree.child(i))
-                i = i + 1
+            tree.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
+            tree.setText(2, 'Document')
+            for field in doc:
+                self.addTreeDict(field, doc[field], tree)
 
-    def addTreeDict(self, doc, tree):
-        for field in doc:
-            if (isinstance(doc[field], list)):
-                if(len(doc[field]) == 0):
-                    child = QtWidgets.QTreeWidgetItem(tree)
-                    child.setText(0, field)
-                    child.setText(1, '[ ' + str(len(doc[field])) + ' elements ]')
-                    child.setText(2, self.properties[field]['type'])
-                    continue
+    def addTreeDict(self, field, doc, tree):
+        if (isinstance(doc, list)):
+            child = QtWidgets.QTreeWidgetItem(tree)
+            child.setText(0, field)
+            child.setText(1, '[ ' + str(len(doc)) + ' elements ]')
+            child.setText(2, self.getFieldType(field))
+            for i, item in enumerate(doc):
+                self.addTreeDict(str(i), item, child)
+            return
 
-                if (isinstance(doc[field][0], dict)):
-                    child = QtWidgets.QTreeWidgetItem(tree)
-                    self.addTreeDict(doc[field], child)
-                else:
-                    child = QtWidgets.QTreeWidgetItem(tree)
-                    child.setText(0, field)
-                    child.setText(1, '[ ' + str(len(doc[field])) + ' elements ')
-                    child.setText(2, self.properties[field]['type'])
-                    for i, item in enumerate(doc[field]):
-                        child = QtWidgets.QTreeWidgetItem(child)
-                        child.setText(0, str(i))
-                        child.setText(1, str(item))
-            else:
-                child = QtWidgets.QTreeWidgetItem(tree)
-                child.setText(0, field)
-                child.setText(1, str(doc[field]))
-                child.setText(2, self.properties[field]['type'])
+        if (isinstance(doc, dict)):
+            child = QtWidgets.QTreeWidgetItem(tree)
+            child.setText(0, field)
+            child.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
+            child.setText(2, self.getFieldType(field))
+            for field in doc:
+                self.addTreeDict(field, doc[field], child)
+            return
+
+        if doc is not None or self.isIgnoreNone:
+            child = QtWidgets.QTreeWidgetItem(tree)
+            child.setText(0, field)
+            child.setText(1, str(doc))
+            child.setText(2, self.getFieldType(field))
+
+    def getFieldType(self, field):
+        if field in self.properties:
+            return self.properties[field]['type']
+        else:
+            return ''
 
     def docRightMenuShow(self, pos):  # 添加右键菜单
         menu = QMenu(self)

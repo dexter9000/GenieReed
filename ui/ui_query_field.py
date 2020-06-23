@@ -10,39 +10,39 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(400, 300)
-        self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
+class Ui_QueryField(object):
+    def setupUi(self, QueryField):
+        QueryField.setObjectName("QueryField")
+        QueryField.resize(400, 300)
+        self.horizontalLayout = QtWidgets.QHBoxLayout(QueryField)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.cond_bool = QtWidgets.QComboBox(Form)
+        self.cond_bool = QtWidgets.QComboBox(QueryField)
         self.cond_bool.setMaximumSize(QtCore.QSize(100, 16777215))
         self.cond_bool.setObjectName("cond_bool")
         self.cond_bool.addItem("")
         self.cond_bool.addItem("")
         self.cond_bool.addItem("")
         self.horizontalLayout.addWidget(self.cond_bool)
-        self.cond_field = QtWidgets.QComboBox(Form)
+        self.cond_field = QtWidgets.QComboBox(QueryField)
         self.cond_field.setObjectName("cond_field")
         self.horizontalLayout.addWidget(self.cond_field)
-        self.btn_add = QtWidgets.QPushButton(Form)
+        self.btn_add = QtWidgets.QPushButton(QueryField)
         self.btn_add.setMaximumSize(QtCore.QSize(20, 16777215))
         self.btn_add.setObjectName("btn_add")
         self.horizontalLayout.addWidget(self.btn_add)
-        self.btn_del = QtWidgets.QPushButton(Form)
+        self.btn_del = QtWidgets.QPushButton(QueryField)
         self.btn_del.setMaximumSize(QtCore.QSize(20, 16777215))
         self.btn_del.setObjectName("btn_del")
         self.horizontalLayout.addWidget(self.btn_del)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(QueryField)
+        QtCore.QMetaObject.connectSlotsByName(QueryField)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, QueryField):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.cond_bool.setItemText(0, _translate("Form", "must"))
-        self.cond_bool.setItemText(1, _translate("Form", "must_not"))
-        self.cond_bool.setItemText(2, _translate("Form", "should"))
-        self.btn_add.setText(_translate("Form", "+"))
-        self.btn_del.setText(_translate("Form", "-"))
+        QueryField.setWindowTitle(_translate("QueryField", "Form"))
+        self.cond_bool.setItemText(0, _translate("QueryField", "must"))
+        self.cond_bool.setItemText(1, _translate("QueryField", "must_not"))
+        self.cond_bool.setItemText(2, _translate("QueryField", "should"))
+        self.btn_add.setText(_translate("QueryField", "+"))
+        self.btn_del.setText(_translate("QueryField", "-"))
