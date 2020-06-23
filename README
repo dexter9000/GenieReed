@@ -1,0 +1,5 @@
+pip install PyQt5 -i https://pypi.douban.com/simple
+pip install elasticsearch -i https://pypi.douban.com/simple
+
+pyinstaller -F -w -i test.ico main.py
+

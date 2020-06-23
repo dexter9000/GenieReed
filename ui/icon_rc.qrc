@@ -1,0 +1,34 @@
+<RCC>
+  <qresource>
+    <file>../resources/icon/locked.png</file>
+    <file>../resources/icon/unlocked.png</file>
+    <file>../resources/icon/collection.png</file>
+    <file>../resources/icon/arrow_left_tz.png</file>
+    <file>../resources/icon/arrow_left_tz_original.png</file>
+    <file>../resources/icon/arrow_right_tz.png</file>
+    <file>../resources/icon/arrow_right_tz_original.png</file>
+    <file>../resources/icon/bullet_go.png</file>
+    <file>../resources/icon/chart_pie.png</file>
+    <file>../resources/icon/computer_link.png</file>
+    <file>../resources/icon/cross_close.png</file>
+    <file>../resources/icon/database.png</file>
+    <file>../resources/icon/database_server.png</file>
+    <file>../resources/icon/disk.png</file>
+    <file>../resources/icon/document_layout.png</file>
+    <file>../resources/icon/execute.png</file>
+    <file>../resources/icon/execute_cursor.png</file>
+    <file>../resources/icon/execute_selection_gt.png</file>
+    <file>../resources/icon/ff_tz.png</file>
+    <file>../resources/icon/find.png</file>
+    <file>../resources/icon/minus.png</file>
+    <file>../resources/icon/plus.png</file>
+    <file>../resources/icon/rainbow.png</file>
+    <file>../resources/icon/rewind_tz.png</file>
+    <file>../resources/icon/run.png</file>
+    <file>../resources/icon/stop.png</file>
+    <file>../resources/icon/table.png</file>
+    <file>../resources/icon/tick.png</file>
+    <file>../resources/icon/undo.png</file>
+    <file>../resources/icon/wrap_off.png</file>
+  </qresource>
+</RCC>
