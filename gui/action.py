@@ -1,6 +1,9 @@
+from PyQt5.QtWidgets import QListView
+
 from es import EsClient
 from gui.AboutDlg import AboutDlg
 from gui.ConnDlg import ConnDlg
+from gui.FilterComboBox import FilterComboBox, FComboBox
 from gui.QueryWidget import QueryWidget
 from gui.ui_db_index_widget import Ui_DbIndexForm
 
@@ -26,15 +29,10 @@ class GuiAction:
         result = client.indices()
         for item in result:
             newDbWidget.addColl(item)
+        self.showMessage("Total Index : " + str(len(result)))
 
     def showMessage(self, message):
         self.window.statusBar().showMessage(message)
-
-    def actiondebugClick(self):
-        print("actiondebug_click")
-        collName = ["111", "222"]
-        for item in collName:
-            self.addColl(self.window.dbListWidget, item)
 
     def selectIndex(self, host, index, indeies):
         self.addNewQueryTab(host, index, indeies)
@@ -73,3 +71,11 @@ class GuiAction:
     def openAboutDlg(self):
         aboutDlg = AboutDlg()
         aboutDlg.exec_()
+
+
+    def actiondebugClick(self):
+        # l = QListView()
+        # l.setIndexWidget()
+        # fc = FilterComboBox()
+        fc = FComboBox()
+        self.window.welcomeLayout.addWidget(fc)

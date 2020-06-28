@@ -1,6 +1,4 @@
 from elasticsearch import Elasticsearch
-import json
-
 
 class EsClient(object):
 

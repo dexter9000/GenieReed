@@ -3,9 +3,9 @@ import math
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QMenu, QAction, QHeaderView
-from pyparsing import unicode
+from PyQt5.QtWidgets import QWidget, QMenu, QAction
 
+from es.EsParser import EsParser
 from gui.QueryField import QueryField
 from ui.ui_query_widget import Ui_QueryForm
 
@@ -24,6 +24,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.totalPage = 0
         self.moduleName = []
         self.properties = []
+        self.fields = []
         self.setupUi(self)
         self.initSetupUi()
         self.label_host.setText(host)
@@ -34,10 +35,11 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.isIgnoreNone = self.btn_ignore_null.isChecked()
 
     def initSetupUi(self):
-        self.fieldNames = self.getFieldNames()
-        self.combo_include.addItems(self.fieldNames)
-        self.combo_exculde.addItems(self.fieldNames)
-        self.combo_sort.addItems(self.fieldNames)
+        self.fieldNames = EsParser.getFullFieldNames(self.pattern)
+        # self.combo_include.addItems(self.fieldNames)
+        # self.combo_include.setCurrentIndex(-1)
+        # self.combo_exculde.addItems(self.fieldNames)
+        # self.combo_sort.addItems(self.fieldNames)
         # self.groupBox.add
         self.btn_pre_page.setEnabled(False)
         self.btn_next_page.setEnabled(False)
@@ -58,30 +60,37 @@ class QueryWidget(QWidget, Ui_QueryForm):
     def initBasicQuery(self):
         self.addField()
 
-    def getFieldNames(self):
-        result = []
-        self.properties = self.pattern['properties']
-        for f in self.properties:
-            result.append(f)
-        return sorted(result, key=str.lower)
-
     def initAction(self):
         self.btn_query.clicked.connect(self.search)
         self.btn_pre_page.clicked.connect(self.toPrePage)
         self.btn_next_page.clicked.connect(self.toNextPage)
         self.table_result.doubleClicked.connect(self.openViewDocument)
+        # self.table_result.itemEntered.connect(self.showItem)
         self.table_result.customContextMenuRequested.connect(self.docRightMenuShow)
         self.txt_page.editingFinished.connect(self.toPage)
         self.btn_ignore_null.toggled.connect(self.ignoreNone)
+        self.field_group.setAcceptDrops(True)
+
+    def dropEvent(self, QDropEvent):
+        pass
+
+    def dragEnterEvent(self, QDragEnterEvent):
+        pass
 
     def addField(self):
-        field_query_line = QueryField(self.fieldNames)
+        field_query_line = QueryField(self.fieldNames, self)
         field_query_line.btn_add.clicked.connect(self.addField)
-        field_query_line.btn_del.clicked.connect(self.delField)
+        # field_query_line.btn_del.clicked.connect(self.delField)
         self.field_group_layout.addWidget(field_query_line)
+        self.fields.append(field_query_line)
 
-    def delField(self):
-        print("delField")
+    def updateQueryFields(self, target):
+        print("QueryWidget::updateQueryFields")
+        for index, field in enumerate(self.fields):
+            if field == target:
+                self.field_group_layout.removeRow(index)
+                self.fields.remove(field)
+                break
         pass
 
     def getQueryFields(self):
@@ -98,7 +107,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.combo_index.addItems(indexList)
 
     def search(self):
-        query = json.loads(self.text_query.toPlainText())
+        query = self.getQuery()
         result = self.es.search(self.index, query, self.page, self.size)
         self.addTableResult(result)
         self.addTreeResult(result)
@@ -107,6 +116,24 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.totalPage = math.ceil(self.es.total / self.size)
         self.page_info.setText('Document ' + str(self.page) + ' of ' + str(self.totalPage))
         self.updateUi()
+
+    def getQuery(self):
+        if self.tabWidget.currentWidget() == self.tab_comp:
+            query = json.loads(self.text_query.toPlainText())
+        else:
+            query = json.loads('{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"includes":["cdp_id"]},"sort": [],"aggs": {}}')
+        return query
+
+    def getBasicQuery(self):
+        query = json.loads('{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"includes":["cdp_id"]},"sort": [],"aggs": {}}')
+        query['_source']['includes'] = self.combo_include.currentText()
+        query['_source']['excludes'] = self.combo_exclude.currentText()
+        query['sort'] = self.combo_sort.currentText()
+        return query
+
+    def getBasicFieldQuery(self):
+
+        pass
 
     def toPrePage(self):
         self.page = int(self.txt_page.text())
@@ -148,8 +175,10 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def addTableRow(self, rowNum, line, fields):
         for colNum, field in enumerate(fields):
-            item = QtWidgets.QTableWidgetItem(str(line[field] or ''))
-            self.table_result.setItem(rowNum, colNum, item)
+            if field in line:
+                item = QtWidgets.QTableWidgetItem(str(line[field]))
+                item.setToolTip(str(line[field]))
+                self.table_result.setItem(rowNum, colNum, item)
 
     def getFields(self, doc):
         result = []
@@ -221,7 +250,19 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def getFieldType(self, field):
         if field in self.properties:
-            return self.properties[field]['type']
+            if 'properties' in self.properties[field]:
+                return ''
+            else:
+                return self.properties[field]['type']
+        else:
+            return ''
+
+    def getFullFieldType(self, field):
+        if field in self.properties:
+            if 'properties' in self.properties[field]:
+                return ''   # TODO
+            else:
+                return self.properties[field]['type']
         else:
             return ''
 

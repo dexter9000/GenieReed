@@ -13,8 +13,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_QueryField(object):
     def setupUi(self, QueryField):
         QueryField.setObjectName("QueryField")
-        QueryField.resize(400, 300)
+        QueryField.resize(400, 50)
         self.horizontalLayout = QtWidgets.QHBoxLayout(QueryField)
+        self.horizontalLayout.setContentsMargins(-1, 5, -1, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.cond_bool = QtWidgets.QComboBox(QueryField)
         self.cond_bool.setMaximumSize(QtCore.QSize(100, 16777215))
