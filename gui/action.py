@@ -49,7 +49,7 @@ class GuiAction:
         pass
 
     def initAction(self):
-        self.window.actiondebug.triggered.connect(self.actiondebugClick)
+        self.window.actiondebug.triggered.connect(self.actionDebugClick)
 
     def openConnDlg(self):
         connDlg = ConnDlg(self.config)
@@ -73,9 +73,7 @@ class GuiAction:
         aboutDlg.exec_()
 
 
-    def actiondebugClick(self):
-        # l = QListView()
-        # l.setIndexWidget()
-        # fc = FilterComboBox()
-        fc = FComboBox()
-        self.window.welcomeLayout.addWidget(fc)
+    def actionDebugClick(self):
+        # fc = FComboBox()
+        # self.window.welcomeLayout.addWidget(fc)
+        pass
