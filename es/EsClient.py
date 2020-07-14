@@ -17,7 +17,10 @@ class EsClient(object):
 
     def testHost(self, host):
         self.openHost(host)
-        print(self.es.info())
+        try:
+            print(self.es.info())
+        except:
+            print("test error")
 
     def indices(self):
         indices = self.es.indices.get_alias()
@@ -72,6 +75,8 @@ class EsClient(object):
         return result
 
     def build_page_query(self, page, query, size):
+        # if 'from' not in query:
+        #     query.push()
         query['from'] = (page - 1) * size
         if query['from'] > 10000:
             query['from'] = 10000 - size

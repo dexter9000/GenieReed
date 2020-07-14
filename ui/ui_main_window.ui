@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>ElaticSearch Client</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icon_rc.qrc">
+    <normaloff>:/resources/logo.png</normaloff>:/resources/logo.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -71,8 +75,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>167</width>
-          <height>505</height>
+          <width>165</width>
+          <height>542</height>
          </rect>
         </property>
         <attribute name="label">
@@ -138,7 +142,7 @@
      <x>0</x>
      <y>0</y>
      <width>1109</width>
-     <height>26</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

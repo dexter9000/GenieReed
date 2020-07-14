@@ -6,6 +6,7 @@ from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QWidget, QMenu, QAction
 
 from es.EsParser import EsParser
+from gui.FilterComboBox import FComboBox
 from gui.QueryField import QueryField
 from ui.ui_query_widget import Ui_QueryForm
 
@@ -36,6 +37,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def initSetupUi(self):
         self.fieldNames = EsParser.getFullFieldNames(self.pattern)
+        self.fieldNames.insert(0, '')
         # self.combo_include.addItems(self.fieldNames)
         # self.combo_include.setCurrentIndex(-1)
         # self.combo_exculde.addItems(self.fieldNames)
@@ -59,6 +61,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def initBasicQuery(self):
         self.addField()
+        self.initSource()
 
     def initAction(self):
         self.btn_query.clicked.connect(self.search)
@@ -70,6 +73,12 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.txt_page.editingFinished.connect(self.toPage)
         self.btn_ignore_null.toggled.connect(self.ignoreNone)
         self.field_group.setAcceptDrops(True)
+
+    def initSource(self):
+        print('initSource')
+        self.combo_include = FComboBox(self.group_other)
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.combo_include)
+        pass
 
     def dropEvent(self, QDropEvent):
         pass
@@ -94,10 +103,18 @@ class QueryWidget(QWidget, Ui_QueryForm):
         pass
 
     def getQueryFields(self):
-        pass
+        result = self.getBasicQuery()
+
+        for field in self.fields:
+            result['query']['bool'][field.getGroup()].append(field.getQuery())
+        return result
 
     def ignoreNone(self, ignore):
         self.isIgnoreNone = ignore
+
+    def getBasicQuery(self):
+        return {"query": {"bool": {"must": [], "must_not": [], "should": []}},
+                "_source": {"excludes": []}, "sort": [], "aggs": {}}
 
     def initQuery(self):
         query = '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"excludes":[]},"sort": [],"aggs": {}}'
@@ -121,14 +138,21 @@ class QueryWidget(QWidget, Ui_QueryForm):
         if self.tabWidget.currentWidget() == self.tab_comp:
             query = json.loads(self.text_query.toPlainText())
         else:
-            query = json.loads('{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"includes":["cdp_id"]},"sort": [],"aggs": {}}')
+            query = self.getQueryFields()
+            print(query)
+            # query = json.loads(
+            #     '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"includes":["cdp_id"]},"sort": [],"aggs": {}}')
         return query
 
     def getBasicQuery(self):
-        query = json.loads('{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"includes":["cdp_id"]},"sort": [],"aggs": {}}')
-        query['_source']['includes'] = self.combo_include.currentText()
-        query['_source']['excludes'] = self.combo_exclude.currentText()
-        query['sort'] = self.combo_sort.currentText()
+        query = json.loads(
+            '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"includes":[],"excludes":[]},"sort": [],"aggs": {}}')
+        if self.combo_include.currentText() != '':
+            query['_source']['includes'] = [self.combo_include.currentText()]
+        if self.combo_exclude.currentText() != '':
+            query['_source']['excludes'] = [self.combo_exclude.currentText()]
+        if self.combo_sort.currentText() != '':
+            query['sort'] = [self.combo_sort.currentText()]
         return query
 
     def getBasicFieldQuery(self):
@@ -260,7 +284,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
     def getFullFieldType(self, field):
         if field in self.properties:
             if 'properties' in self.properties[field]:
-                return ''   # TODO
+                return ''  # TODO
             else:
                 return self.properties[field]['type']
         else:

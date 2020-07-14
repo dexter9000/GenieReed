@@ -3,7 +3,6 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QWidget, QListWidget, QComboBox, QLineEdit, QListView, QCheckBox, QHBoxLayout, \
     QListWidgetItem
 
-from ui.ui_filter_combobox import Ui_FilterComboBox
 
 class CheckedItem(QWidget):
     def __init__(self, text, parent=None):
@@ -20,6 +19,7 @@ class CheckedItem(QWidget):
     def sizeHint(self):
         # 决定item的高度
         return QSize(200, 22)
+
 
 class FilterComboBox(QComboBox):
 
@@ -94,7 +94,7 @@ class FComboBox(QComboBox):
 
     def setupUi(self):
         self.pListWidget = QListWidget(self)
-        pLineEdit = QLineEdit(self)
+        self.pLineEdit = QLineEdit(self)
         for i in range(5):
             self.addItem(str(i))
             # pItem = QListWidgetItem(pListWidget)
@@ -108,10 +108,11 @@ class FComboBox(QComboBox):
 
         self.setModel(self.pListWidget.model())
         self.setView(self.pListWidget)
-        self.setLineEdit(pLineEdit)
+        self.setLineEdit(self.pLineEdit)
         self.setEditable(True)
         # pLineEdit.setReadOnly(True)
-        pLineEdit.textChanged.connect(self.textChanged)
+        self.pListWidget.itemClicked.connect(self.selectClick)
+        self.pLineEdit.textChanged.connect(self.textChanged)
 
     def addItem(self, text):
         pItem = QListWidgetItem(self.pListWidget)
@@ -119,20 +120,29 @@ class FComboBox(QComboBox):
         pItem.setData(Qt.UserRole, text)
         pCheckBox = QCheckBox(self)
         pCheckBox.setText(text)
+
+        qss = 'QCheckBox {margin-left: 10px;}'
+        pCheckBox.setStyleSheet(qss)
+
         self.pListWidget.addItem(pItem)
         self.pListWidget.setItemWidget(pItem, pCheckBox)
+
         pCheckBox.stateChanged.connect(self.stateChanged)
         self.items.append(text)
         self.itemCheckBoxes.append(pCheckBox)
 
+    def selectClick(self):
+        print('click')
+        pass
+
     def stateChanged(self, p_int):
-        for item in self.itemCheckBoxes:
-            if item.isChecked():
-                print('stateChanged: ' + item.text() + ' : ' + str(item.isChecked()))
+        print("stateChanged")
+        strs = map(lambda x: x.text(), filter(lambda x: x.isChecked(), self.itemCheckBoxes))
+        txt = ",".join(str(i) for i in strs)
+        self.pLineEdit.setText(txt)
         pass
 
     def textChanged(self, p_str):
-        print(str(p_str))
         pass
 
     def filterItems(self, text):

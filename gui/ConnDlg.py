@@ -83,6 +83,7 @@ class ConnDlg(QDialog, Ui_ConnDlg):
 
     def openNewConnDlg(self):
         editConnDlg = EditConnDlg()
+        editConnDlg.setWindowTitle('New Connect')
         result = editConnDlg.exec_()
         if(result == 1):
             self.addNewHost(editConnDlg.getHost())

@@ -60,7 +60,7 @@
           <x>0</x>
           <y>0</y>
           <width>400</width>
-          <height>483</height>
+          <height>497</height>
          </rect>
         </property>
         <attribute name="label">
@@ -95,6 +95,13 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <item>
+          <widget class="QCheckBox" name="checkBox">
+           <property name="text">
+            <string>CheckBox</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Welcome</string>
@@ -114,7 +121,7 @@
      <x>0</x>
      <y>0</y>
      <width>1109</width>
-     <height>26</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

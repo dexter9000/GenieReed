@@ -1,5 +1,6 @@
 <RCC>
   <qresource>
+    <file>../resources/logo.png</file>
     <file>../resources/icon/locked.png</file>
     <file>../resources/icon/unlocked.png</file>
     <file>../resources/icon/collection.png</file>

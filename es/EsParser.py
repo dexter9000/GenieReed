@@ -39,3 +39,6 @@ class EsParser:
                 return properties[field]['type']
         else:
             return ''
+
+    def getFieldInfo(self, field):
+        pass
