@@ -65,15 +65,37 @@ class Ui_MainWindow(object):
         self.welcome_tab = QtWidgets.QWidget()
         self.welcome_tab.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.welcome_tab.setObjectName("welcome_tab")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self.welcome_tab)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(40, 40, 341, 161))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.welcomeLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.welcomeLayout.setContentsMargins(0, 0, 0, 0)
-        self.welcomeLayout.setObjectName("welcomeLayout")
-        self.label = QtWidgets.QLabel(self.horizontalLayoutWidget)
+        self.label = QtWidgets.QLabel(self.welcome_tab)
+        self.label.setGeometry(QtCore.QRect(20, 20, 300, 41))
+        self.label.setMinimumSize(QtCore.QSize(300, 0))
+        self.label.setMaximumSize(QtCore.QSize(300, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
         self.label.setObjectName("label")
-        self.welcomeLayout.addWidget(self.label)
+        self.tipWidget = QtWidgets.QStackedWidget(self.welcome_tab)
+        self.tipWidget.setGeometry(QtCore.QRect(10, 70, 421, 281))
+        self.tipWidget.setMinimumSize(QtCore.QSize(400, 0))
+        self.tipWidget.setStyleSheet("background-color:rgb(255, 255, 255)")
+        self.tipWidget.setObjectName("tipWidget")
+        self.tip_page_1 = QtWidgets.QWidget()
+        self.tip_page_1.setObjectName("tip_page_1")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.tip_page_1)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.tip_1 = QtWidgets.QTextBrowser(self.tip_page_1)
+        self.tip_1.setObjectName("tip_1")
+        self.verticalLayout_4.addWidget(self.tip_1)
+        self.tipWidget.addWidget(self.tip_page_1)
+        self.tip_page_2 = QtWidgets.QWidget()
+        self.tip_page_2.setObjectName("tip_page_2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.tip_page_2)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.tip_2 = QtWidgets.QTextBrowser(self.tip_page_2)
+        self.tip_2.setObjectName("tip_2")
+        self.horizontalLayout.addWidget(self.tip_2)
+        self.tipWidget.addWidget(self.tip_page_2)
         self.tabWidget.addTab(self.welcome_tab, "")
         self.horizontalLayout_2.addWidget(self.splitter)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -137,13 +159,28 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.dbList.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
+        self.tipWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "ElaticSearch Client"))
         self.dbList.setItemText(self.dbList.indexOf(self.dbWidget), _translate("MainWindow", "Host"))
-        self.label.setText(_translate("MainWindow", "Welcome"))
+        self.label.setText(_translate("MainWindow", "Welcome To ElaticSearch Client"))
+        self.tip_1.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">向导式查询支持拖拽方式编辑查询条件</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">将查询结果的字段拖拽到条件区域，可以快速添加查询条件</p></body></html>"))
+        self.tip_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">直接编辑查询结果</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">通过双击查询结果的字段，可以快速修改数据。</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.welcome_tab), _translate("MainWindow", "Welcome"))
         self.menuFile.setTitle(_translate("MainWindow", "&File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))

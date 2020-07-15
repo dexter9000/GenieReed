@@ -2,7 +2,8 @@ import sys
 
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QMenu
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QCoreApplication
+
 from ui.ui_main_window import Ui_MainWindow
 from gui.ConnDlg import ConnDlg
 from gui.action import GuiAction
@@ -50,6 +51,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # QMessageBox.information(self, "温馨提示", "数据库连接成功！", QMessageBox.Yes, QMessageBox.Yes)
 
 if __name__ == '__main__':
+    QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+
     app = QApplication(sys.argv)
     window = MyWindow()
     window.show()
