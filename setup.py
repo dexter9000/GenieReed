@@ -9,7 +9,7 @@ setup(
     url='https://github.com/dexter9000/GenieReed',
     description='',
     # py_modules=['', 'es', 'gui', 'ui'],
-    packages=['es', 'gui', 'ui', 'resources'],
+    packages=['es', 'gui', 'ui'],
     scripts = ['main.py'],
     install_requires=[
         'elasticsearch>=7.8.0',

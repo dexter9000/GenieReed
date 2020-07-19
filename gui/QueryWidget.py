@@ -3,11 +3,11 @@ import math
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QMenu, QAction
+from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox
 
 from es.EsParser import EsParser
-from gui.FilterComboBox import FComboBox
 from gui.QueryField import QueryField
+from gui.SignalThread import SignalThread
 from ui.ui_query_widget import Ui_QueryForm
 
 
@@ -76,8 +76,8 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def initSource(self):
         print('initSource')
-        self.combo_include = FComboBox(self.group_other)
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.combo_include)
+        # self.combo_include = FComboBox(self.group_other)
+        # self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.combo_include)
         pass
 
     def dropEvent(self, QDropEvent):
@@ -124,15 +124,26 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.combo_index.addItems(indexList)
 
     def search(self):
+        my_thread = SignalThread(self.searchFn)
+        my_thread.my_signal.connect(self.searchSignalFn)
+        my_thread.start()
+        pass
+
+    def searchFn(self):
         query = self.getQuery()
-        result = self.es.search(self.index, query, self.page, self.size)
-        self.addTableResult(result)
-        self.addTreeResult(result)
-        self.addJsonResult(result)
-        self.label_total.setText(str(self.es.total))
-        self.totalPage = math.ceil(self.es.total / self.size)
-        self.page_info.setText('Document ' + str(self.page) + ' of ' + str(self.totalPage))
-        self.updateUi()
+        return self.es.search(self.index, query, self.page, self.size)
+
+    def searchSignalFn(self, result):
+        if result['result'] == 'succ':
+            self.addTableResult(result['data'])
+            self.addTreeResult(result['data'])
+            self.addJsonResult(result['data'])
+            self.label_total.setText(str(self.es.total))
+            self.totalPage = math.ceil(self.es.total / self.size)
+            self.page_info.setText('Document ' + str(self.page) + ' of ' + str(self.totalPage))
+            self.updateUi()
+        elif result['result'] == 'error':
+            QMessageBox.critical(self.window, "失败", "查询失败")
 
     def getQuery(self):
         if self.tabWidget.currentWidget() == self.tab_comp:

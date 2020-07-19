@@ -1,6 +1,6 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QMessageBox
+from PyQt5.QtWidgets import QDialog
 
 from gui.EditConnDlg import EditConnDlg
 from ui.ui_conn_dlg import Ui_ConnDlg
@@ -16,8 +16,8 @@ class ConnDlg(QDialog, Ui_ConnDlg):
 
     def initAction(self):
         self.addConn.clicked.connect(self.openNewConnDlg)
-        # self.delConn.clicked.connect(self.addRow)
-        # self.testConn.clicked.connect(self.addRow)
+        self.editConn.clicked.connect(self.openEditConnDlg)
+        self.delConn.clicked.connect(self.addRow)
 
     def cleanHosts(self):
         for i in range(self.tableWidget.rowCount()):
@@ -29,9 +29,6 @@ class ConnDlg(QDialog, Ui_ConnDlg):
             self.addNewHost(host)
         self.tableWidget.selectRow(0)
 
-    def testHost(self):
-        pass
-
     def selectHost(self):
         list = self.tableWidget.selectedItems()
         self.selectedHost = {
@@ -39,9 +36,7 @@ class ConnDlg(QDialog, Ui_ConnDlg):
             "host": list[1].text(),
             "port": int(list[2].text())
         }
-
-    def saveConnection(self):
-        pass
+        return self.selectedHost
 
     def getConnection(self):
         self.selectHost()
@@ -75,9 +70,6 @@ class ConnDlg(QDialog, Ui_ConnDlg):
     def delHost(self):
         pass
 
-    def testHost(self):
-        pass
-
     def closeDlg(self):
         self.close()
 
@@ -85,11 +77,13 @@ class ConnDlg(QDialog, Ui_ConnDlg):
         editConnDlg = EditConnDlg()
         editConnDlg.setWindowTitle('New Connect')
         result = editConnDlg.exec_()
-        if(result == 1):
+        if (result == 1):
             self.addNewHost(editConnDlg.getHost())
             self.saveNewHost(editConnDlg.getHost())
 
-    def openEditConnDlg(self, host):
+    def openEditConnDlg(self):
+        host = self.selectHost()
         editConnDlg = EditConnDlg()
+        editConnDlg.initHost(host['name'], host['host'], host['port'])
         editConnDlg.exec_()
         pass

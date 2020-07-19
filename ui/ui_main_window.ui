@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1109</width>
-    <height>648</height>
+    <width>892</width>
+    <height>551</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,8 +75,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>165</width>
-          <height>542</height>
+          <width>132</width>
+          <height>445</height>
          </rect>
         </property>
         <attribute name="label">
@@ -198,6 +198,7 @@ p, li { white-space: pre-wrap; }
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="page"/>
         </widget>
        </widget>
       </widget>
@@ -210,7 +211,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1109</width>
+     <width>892</width>
      <height>20</height>
     </rect>
    </property>

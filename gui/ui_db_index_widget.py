@@ -53,9 +53,8 @@ class Ui_DbIndexForm(QWidget):
 
     def connRightMenuShow(self, pos):   #添加右键菜单
         menu = QMenu(self)
-        menu.addAction(QAction('Close', menu))
-        menu.addAction(QAction('动作2', menu))
-        menu.addAction(QAction('动作3', menu))
+        menu.addAction(QAction('Info', menu))
+        menu.addAction(QAction('Status', menu))
         # menu.triggered.connect(self.menuSlot)
         menu.exec_(QCursor.pos())
 

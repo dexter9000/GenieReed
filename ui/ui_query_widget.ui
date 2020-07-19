@@ -142,6 +142,18 @@
        <property name="spacing">
         <number>4</number>
        </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="enabled">
@@ -168,6 +180,9 @@
            <string>Basic</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QSplitter" name="splitter_simple">
              <property name="orientation">
@@ -212,7 +227,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>306</width>
+                    <width>309</width>
                     <height>99</height>
                    </rect>
                   </property>
@@ -251,6 +266,18 @@
               <layout class="QFormLayout" name="formLayout">
                <property name="horizontalSpacing">
                 <number>3</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="label">
@@ -365,7 +392,7 @@
         <number>16</number>
        </property>
        <property name="leftMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>0</number>
@@ -376,130 +403,6 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_lock">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="icon_rc.qrc">
-             <normaloff>:/resources/icon/unlocked.png</normaloff>:/resources/icon/unlocked.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_ignore_null">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>None</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_pre_page">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="icon_rc.qrc">
-             <normaloff>:/resources/icon/arrow_left_tz.png</normaloff>:/resources/icon/arrow_left_tz.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="txt_page">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_next_page">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="icon_rc.qrc">
-             <normaloff>:/resources/icon/arrow_right_tz.png</normaloff>:/resources/icon/arrow_right_tz.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="txt_size">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>10</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="page_info">
-           <property name="text">
-            <string>Documents 1 of 1</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
        <item>
         <widget class="QWidget" name="widget_4" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -518,13 +421,25 @@
           <item>
            <widget class="QTabWidget" name="tabs_result">
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="tab_table">
              <attribute name="title">
               <string>Table</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_6">
+              <property name="leftMargin">
+               <number>2</number>
+              </property>
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="rightMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>2</number>
+              </property>
               <item>
                <widget class="QTableWidget" name="table_result">
                 <property name="editTriggers">
@@ -539,6 +454,18 @@
               <string>Tree</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_7">
+              <property name="leftMargin">
+               <number>2</number>
+              </property>
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="rightMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>2</number>
+              </property>
               <item>
                <widget class="QTreeWidget" name="tree_result">
                 <property name="sortingEnabled">
@@ -587,16 +514,16 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <property name="leftMargin">
-               <number>0</number>
+               <number>2</number>
               </property>
               <property name="topMargin">
-               <number>0</number>
+               <number>2</number>
               </property>
               <property name="rightMargin">
-               <number>0</number>
+               <number>2</number>
               </property>
               <property name="bottomMargin">
-               <number>0</number>
+               <number>2</number>
               </property>
               <item>
                <widget class="QTextBrowser" name="json_result">
@@ -635,6 +562,22 @@
              </widget>
             </item>
             <item>
+             <widget class="QProgressBar" name="search_progress">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="value">
+               <number>99</number>
+              </property>
+              <property name="textVisible">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -646,6 +589,123 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="btn_lock">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="icon_rc.qrc">
+                  <normaloff>:/resources/icon/unlocked.png</normaloff>:/resources/icon/unlocked.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_ignore_null">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>None</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_pre_page">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="icon_rc.qrc">
+                  <normaloff>:/resources/icon/arrow_left_tz.png</normaloff>:/resources/icon/arrow_left_tz.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="txt_page">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>1</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_next_page">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="icon_rc.qrc">
+                  <normaloff>:/resources/icon/arrow_right_tz.png</normaloff>:/resources/icon/arrow_right_tz.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="txt_size">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>10</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="page_info">
+                <property name="text">
+                 <string>Documents 1 of 1</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>

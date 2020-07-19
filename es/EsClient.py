@@ -1,5 +1,8 @@
 from elasticsearch import Elasticsearch
 
+from gui.Error import Error
+
+
 class EsClient(object):
 
     def __init__(self):
@@ -7,8 +10,12 @@ class EsClient(object):
         pass
 
     def open(self, ip, port):
-        self.hostname = ip + ':' + str(port)
-        self.es = Elasticsearch([{'host': ip, 'port': port}])
+        try:
+            self.hostname = ip + ':' + str(port)
+            self.es = Elasticsearch([{'host': ip, 'port': port}])
+        except:
+            Error.showError("123")
+
 
     def openHost(self, host):
         self.hostname = host
@@ -17,10 +24,7 @@ class EsClient(object):
 
     def testHost(self, host):
         self.openHost(host)
-        try:
-            print(self.es.info())
-        except:
-            print("test error")
+        print(self.es.info())
 
     def indices(self):
         indices = self.es.indices.get_alias()
@@ -64,7 +68,7 @@ class EsClient(object):
         queryData = self.es.search(
             index=index,
             body=query)
-        print(queryData)
+        # print(queryData)
 
         self.total = queryData['hits']['total']
         if (isinstance(self.total, dict)):      # ES 5.7版本变更
