@@ -80,47 +80,47 @@
        <widget class="QComboBox" name="cond_operator">
         <item>
          <property name="text">
-          <string>match</string>
+          <string notr="true">match</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>text</string>
+          <string notr="true">text</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>term</string>
+          <string notr="true">term</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>wildcard</string>
+          <string notr="true">wildcard</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>prefix</string>
+          <string notr="true">prefix</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>fuzzy</string>
+          <string notr="true">fuzzy</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>range</string>
+          <string notr="true">range</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>query_string</string>
+          <string notr="true">query_string</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>missing</string>
+          <string notr="true">missing</string>
          </property>
         </item>
        </widget>

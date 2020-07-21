@@ -201,7 +201,7 @@ class Ui_QueryForm(object):
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab_table)
         self.verticalLayout_6.setContentsMargins(2, 2, 2, 2)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.table_result = QtWidgets.QTableWidget(self.tab_table)
+        self.table_result = ResultTable(self.tab_table)
         self.table_result.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.QAbstractItemView.EditKeyPressed)
         self.table_result.setObjectName("table_result")
         self.table_result.setColumnCount(0)
@@ -213,7 +213,8 @@ class Ui_QueryForm(object):
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.tab_tree)
         self.verticalLayout_7.setContentsMargins(2, 2, 2, 2)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.tree_result = QtWidgets.QTreeWidget(self.tab_tree)
+        self.tree_result = ResultTree(self.tab_tree)
+        self.tree_result.setAcceptDrops(False)
         self.tree_result.setWordWrap(True)
         self.tree_result.setObjectName("tree_result")
         self.tree_result.headerItem().setText(0, "Key")
@@ -336,4 +337,6 @@ class Ui_QueryForm(object):
         self.txt_page.setText(_translate("QueryForm", "1"))
         self.txt_size.setText(_translate("QueryForm", "10"))
         self.page_info.setText(_translate("QueryForm", "Documents 1 of 1"))
+from gui.ResultTable import ResultTable
+from gui.ResultTree import ResultTree
 from ui import icon_rc

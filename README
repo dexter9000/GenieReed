@@ -1,8 +1,13 @@
-# pip install -r requirements.txt
+# GenieReed
 
-pip install PyQt5 -i https://pypi.douban.com/simple
-pip install elasticsearch -i https://pypi.douban.com/simple
-pip install pyinstaller  -i https://pypi.douban.com/simple
+## 环境准备
+首先准备python3的运行环境，然后在源码目录执行下面的语句
+```
+pip install -r requirements.txt
+```
 
-pyinstaller -F -w -i favicon.ico main.py
-
+## 启动
+执行下面的命令就可以启动程序
+```
+python main.py
+```

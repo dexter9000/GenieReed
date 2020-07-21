@@ -3,12 +3,12 @@ import math
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox, QAbstractItemView
-from PyQt5 import QtCore
+from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox, QTreeWidget
 
 from es.EsParser import EsParser
 from gui.DragLabel import DragLabel
 from gui.QueryField import QueryField
+from gui.ResultTable import ResultTable
 from gui.SignalThread import SignalThread
 from ui.ui_query_widget import Ui_QueryForm
 
@@ -37,6 +37,10 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.lockTableResult()
         self.isIgnoreNone = self.btn_ignore_null.isChecked()
 
+    def setIgnoreNone(self, ignoreNone):
+        self.isIgnoreNone = ignoreNone
+        pass
+
     def initSetupUi(self):
         self.fieldNames = EsParser.getFullFieldNames(self.pattern)
         self.fieldNames.insert(0, 'match_all')
@@ -59,11 +63,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
         else:
             self.btn_pre_page.setEnabled(False)
 
-        self.table_result.setDragEnabled(True)
-
-    def initBasicQuery(self):
-        self.addField()
-        self.initSource()
 
     def initAction(self):
         self.btn_query.clicked.connect(self.search)
@@ -73,7 +72,11 @@ class QueryWidget(QWidget, Ui_QueryForm):
         # self.table_result.itemEntered.connect(self.showItem)
         self.table_result.customContextMenuRequested.connect(self.docRightMenuShow)
         self.txt_page.editingFinished.connect(self.toPage)
-        self.btn_ignore_null.toggled.connect(self.ignoreNone)
+        self.btn_ignore_null.toggled.connect(self.tree_result.setIgnoreNone)
+
+    def initBasicQuery(self):
+        self.addField()
+        self.initSource()
 
     def initSource(self):
         print('initSource')
@@ -89,13 +92,14 @@ class QueryWidget(QWidget, Ui_QueryForm):
         return field_query_line
 
     def dragField(self, e):
+        query = {}
+        query = e.source().getQuery(e)
+        # if (isinstance(e.source(), ResultTable)):
+        # elif (isinstance(e.source(), QTreeWidget)):
+        #     query = self.getQueryFromTable(e)
+
         field_query_line = self.addField()
-        table = e.source()
-        item = table.selectedItems()[0]
-        column = table.column(item)
-        field = table.horizontalHeaderItem(column).text()
-        value = item.text()
-        field_query_line.set_value(field, "match", value)
+        field_query_line.set_query(query)
 
     def updateQueryFields(self, target):
         print("QueryWidget::updateQueryFields")
@@ -106,17 +110,36 @@ class QueryWidget(QWidget, Ui_QueryForm):
                 break
         pass
 
+    def getQuery(self):
+        if self.tabWidget.currentWidget() == self.tab_comp:
+            query = json.loads(self.text_query.toPlainText())
+        else:
+            query = self.getQueryFields()
+        return query
+
+    def getBasicQuery(self):
+        query = json.loads(
+            '{"query": {"bool": {"must": [],"must_not": [],"should": []}},"_source":{"includes":[],"excludes":[]},"sort": [],"aggs": {}}')
+        if self.combo_include.currentText() != '':
+            query['_source']['includes'] = [self.combo_include.currentText()]
+        if self.combo_exclude.currentText() != '':
+            query['_source']['excludes'] = [self.combo_exclude.currentText()]
+        if self.combo_sort.currentText() != '':
+            query['sort'] = [self.combo_sort.currentText()]
+        return query
+
+    def getBasicFieldQuery(self):
+
+        pass
+
     def getQueryFields(self):
         result = self.getBasicQuery()
-
         for field in self.fields:
             result['query']['bool'][field.getGroup()].append(field.getQuery())
         if len(result['query']['bool']['must']) == 0 and len(result['query']['bool']['should']) == 0:
             result['query']['bool']['should'].append({"match_all": {}})
         return result
 
-    def ignoreNone(self, ignore):
-        self.isIgnoreNone = ignore
 
     def getBasicQuery(self):
         return {"query": {"bool": {"must": [], "must_not": [], "should": []}},
@@ -141,8 +164,8 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def searchSignalFn(self, result):
         if result['result'] == 'succ':
-            self.addTableResult(result['data'])
-            self.addTreeResult(result['data'])
+            self.table_result.addTableResult(result['data'])
+            self.tree_result.addTreeResult(result['data'])
             self.addJsonResult(result['data'])
             self.label_total.setText(str(self.es.total))
             self.totalPage = math.ceil(self.es.total / self.size)
@@ -151,28 +174,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
         elif result['result'] == 'error':
             QMessageBox.critical(self.window, "失败", "查询失败")
         self.search_progress.setVisible(False)
-
-    def getQuery(self):
-        if self.tabWidget.currentWidget() == self.tab_comp:
-            query = json.loads(self.text_query.toPlainText())
-        else:
-            query = self.getQueryFields()
-        return query
-
-    def getBasicQuery(self):
-        query = json.loads(
-            '{"query": {"bool": {"must": [],"must_not": [],"should": []}},"_source":{"includes":[],"excludes":[]},"sort": [],"aggs": {}}')
-        if self.combo_include.currentText() != '':
-            query['_source']['includes'] = [self.combo_include.currentText()]
-        if self.combo_exclude.currentText() != '':
-            query['_source']['excludes'] = [self.combo_exclude.currentText()]
-        if self.combo_sort.currentText() != '':
-            query['sort'] = [self.combo_sort.currentText()]
-        return query
-
-    def getBasicFieldQuery(self):
-
-        pass
 
     def toPrePage(self):
         self.page = int(self.txt_page.text())
@@ -192,40 +193,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.page = int(self.txt_page.text())
         self.size = int(self.txt_size.text())
         self.search()
-
-    def addTableResult(self, result):
-        fields = []
-        for i in range(self.table_result.rowCount()):
-            self.table_result.removeRow(0)
-
-        if (isinstance(result, list)):
-            if (len(result) <= 0):
-                return
-            fields = self.getFields(result[0])
-        elif (isinstance(result, dict)):
-            fields = self.getFields(result)
-
-        # self.table_result.setRowCount(0)
-        self.table_result.setColumnCount(len(fields))
-        self.table_result.setHorizontalHeaderLabels(fields)
-        self.table_result.setRowCount(len(result))
-
-        for rowNum, item in enumerate(result):
-            self.addTableRow(rowNum, item, fields)
-
-    def addTableRow(self, rowNum, line, fields):
-        for colNum, field in enumerate(fields):
-            if field in line:
-                item = QtWidgets.QTableWidgetItem(str(line[field]))
-                item.setToolTip(str(line[field]))
-                self.table_result.setItem(rowNum, colNum, item)
-
-    def getFields(self, doc):
-        result = []
-        for f in doc:
-            result.append(f)
-        result = sorted(result, key=str.lower)
-        return result
 
     def addJsonResult(self, result):
         self.json_result.setText(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
@@ -248,54 +215,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
         doc = self.table_result.currentRow()
         print(doc)
         pass
-
-    def addTreeResult(self, result):
-        self.tree_result.clear()
-        for doc in result:
-            tree = QtWidgets.QTreeWidgetItem(self.tree_result)
-            self.addTreeRecord(doc, tree)
-
-    def addTreeRecord(self, doc, tree):
-        if (isinstance(doc, dict)):
-            tree.setText(0, "{doc}")
-            tree.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
-            tree.setText(2, 'Document')
-            for field in doc:
-                self.addTreeDict(field, doc[field], tree)
-
-    def addTreeDict(self, field, doc, tree):
-        if (isinstance(doc, list)):
-            child = QtWidgets.QTreeWidgetItem(tree)
-            child.setText(0, field)
-            child.setText(1, '[ ' + str(len(doc)) + ' elements ]')
-            child.setText(2, self.getFieldType(field))
-            for i, item in enumerate(doc):
-                self.addTreeDict(str(i), item, child)
-            return
-
-        if (isinstance(doc, dict)):
-            child = QtWidgets.QTreeWidgetItem(tree)
-            child.setText(0, field)
-            child.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
-            child.setText(2, self.getFieldType(field))
-            for field in doc:
-                self.addTreeDict(field, doc[field], child)
-            return
-
-        if doc is not None or self.isIgnoreNone:
-            child = QtWidgets.QTreeWidgetItem(tree)
-            child.setText(0, field)
-            child.setText(1, str(doc))
-            child.setText(2, self.getFieldType(field))
-
-    def getFieldType(self, field):
-        if field in self.properties:
-            if 'properties' in self.properties[field]:
-                return ''
-            else:
-                return self.properties[field]['type']
-        else:
-            return ''
 
     def getFullFieldType(self, field):
         if field in self.properties:
