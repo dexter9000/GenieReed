@@ -35,3 +35,8 @@ class Config():
             self.config_json[path] = []
         self.config_json[path].append(jsonObj)
 
+    def del_list_item(self, path, index):
+        if(self.config_json[path] == None):
+            self.config_json[path] = []
+        del self.config_json[path][index]
+

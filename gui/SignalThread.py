@@ -28,4 +28,3 @@ class SignalThread(QThread):  # 线程类
             self.result['status'] = "end"
             self.result['result'] = "error"
             self.my_signal.emit(self.result)
-        print("SignalThread Finish")

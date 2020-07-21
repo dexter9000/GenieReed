@@ -1,3 +1,4 @@
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QWidget
 
 from ui.ui_query_field import Ui_QueryField
@@ -11,22 +12,39 @@ class QueryField(QWidget, Ui_QueryField):
         self.fieldNames = fieldNames
         self.status = True
         self.setupUi(self)
-        self.cond_field.addItems(self.fieldNames)
-        self.initAction()
+        self.cond_operator.setVisible(False)
+        self.cond_value.setVisible(False)
+        self.load_items()
+        self.init_action()
+
+    def set_value(self, field, operator, value):
+        self.cond_field.setCurrentText(field)
+        self.cond_operator.setCurrentText(operator)
+        self.cond_value.setText(value)
+
+    def load_items(self):
+        model = QStandardItemModel()
+        for field in self.fieldNames:
+            item = QStandardItem(field)
+            item.setToolTip(field)
+            model.appendRow(item)
+        self.cond_field.setModel(model)
 
     def getQuery(self):
-        result = {
-            self.cond_operator.currentText(): {
-                self.cond_field.currentText(): self.cond_value.text()
+        if self.cond_field.currentText() == 'match_all':
+            return {"match_all": {}}
+        else:
+            return {
+                self.cond_operator.currentText(): {
+                    self.cond_field.currentText(): self.cond_value.text()
+                }
             }
-        }
-        return result
 
     def getGroup(self):
         return self.cond_bool.currentText()
 
 
-    def initAction(self):
+    def init_action(self):
         # self.btn_add.clicked.connect(self.addField)
         self.btn_del.clicked.connect(self.delField)
         self.cond_field.currentTextChanged.connect(self.changeField)
@@ -43,6 +61,9 @@ class QueryField(QWidget, Ui_QueryField):
         pass
 
     def changeField(self):
-        print(self.cond_field.currentText())
-
-        pass
+        if self.cond_field.currentText() == 'match_all':
+            self.cond_operator.setVisible(False)
+            self.cond_value.setVisible(False)
+        else:
+            self.cond_operator.setVisible(True)
+            self.cond_value.setVisible(True)

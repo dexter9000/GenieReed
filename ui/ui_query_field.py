@@ -29,6 +29,7 @@ class Ui_QueryField(object):
         self.cond_bool.setItemText(2, "should")
         self.horizontalLayout.addWidget(self.cond_bool)
         self.cond_field = QtWidgets.QComboBox(QueryField)
+        self.cond_field.setMaximumSize(QtCore.QSize(200, 16777215))
         self.cond_field.setObjectName("cond_field")
         self.horizontalLayout.addWidget(self.cond_field)
         self.widget = QtWidgets.QWidget(QueryField)

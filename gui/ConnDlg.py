@@ -17,7 +17,7 @@ class ConnDlg(QDialog, Ui_ConnDlg):
     def initAction(self):
         self.addConn.clicked.connect(self.openNewConnDlg)
         self.editConn.clicked.connect(self.openEditConnDlg)
-        self.delConn.clicked.connect(self.addRow)
+        self.delConn.clicked.connect(self.delRow)
 
     def cleanHosts(self):
         for i in range(self.tableWidget.rowCount()):
@@ -65,10 +65,13 @@ class ConnDlg(QDialog, Ui_ConnDlg):
     def saveNewHost(self, host):
         self.config.add_list_item('connections', host)
         self.config.save_config()
-        pass
 
-    def delHost(self):
-        pass
+    def delRow(self):
+        item = self.tableWidget.selectedItems()[0]
+        row = self.tableWidget.row(item)
+        self.tableWidget.removeRow(row)
+        self.config.del_list_item('connections', row)
+        self.config.save_config()
 
     def closeDlg(self):
         self.close()

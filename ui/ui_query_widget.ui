@@ -195,6 +195,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="acceptDrops">
+               <bool>false</bool>
+              </property>
               <property name="title">
                <string>Query</string>
               </property>
@@ -213,6 +216,9 @@
                </property>
                <item>
                 <widget class="QScrollArea" name="scrollArea">
+                 <property name="acceptDrops">
+                  <bool>false</bool>
+                 </property>
                  <property name="autoFillBackground">
                   <bool>false</bool>
                  </property>
@@ -222,19 +228,19 @@
                  <property name="widgetResizable">
                   <bool>true</bool>
                  </property>
-                 <widget class="QWidget" name="field_group">
+                 <widget class="QWidget" name="field_area">
                   <property name="geometry">
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>309</width>
-                    <height>99</height>
+                    <width>322</width>
+                    <height>85</height>
                    </rect>
                   </property>
                   <property name="acceptDrops">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
-                  <layout class="QFormLayout" name="field_group_layout">
+                  <layout class="QVBoxLayout" name="field_area_layout">
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
@@ -247,6 +253,9 @@
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
+                   <item>
+                    <layout class="QFormLayout" name="field_group_layout"/>
+                   </item>
                   </layout>
                  </widget>
                 </widget>
@@ -421,7 +430,7 @@
           <item>
            <widget class="QTabWidget" name="tabs_result">
             <property name="currentIndex">
-             <number>2</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_table">
              <attribute name="title">
