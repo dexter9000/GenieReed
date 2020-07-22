@@ -43,7 +43,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
     def initSetupUi(self):
         self.fieldNames = EsParser.getFullFieldNames(self.pattern)
         self.fieldNames.insert(0, 'match_all')
-
+        self.splitter.setStyleSheet("QSplitter::handle { background-color: white; }")
         self.btn_pre_page.setEnabled(False)
         self.btn_next_page.setEnabled(False)
         self.initBasicQuery()
@@ -61,7 +61,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
             self.btn_pre_page.setEnabled(True)
         else:
             self.btn_pre_page.setEnabled(False)
-
 
     def initAction(self):
         self.btn_query.clicked.connect(self.search)
@@ -135,7 +134,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
             result['query']['bool']['should'].append({"match_all": {}})
         return result
 
-
     def getBasicQuery(self):
         return {"query": {"bool": {"must": [], "must_not": [], "should": []}},
                 "_source": {"excludes": []}, "sort": [], "aggs": {}}
@@ -143,9 +141,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
     def initQuery(self):
         query = '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"excludes":[]},"sort": [],"aggs": {}}'
         self.text_query.setPlainText(query)
-
-    def addAllIndex(self, indexList):
-        self.combo_index.addItems(indexList)
 
     def search(self):
         my_thread = SignalThread(self.searchFn)

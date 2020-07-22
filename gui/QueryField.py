@@ -27,6 +27,10 @@ class QueryField(QWidget, Ui_QueryField):
         self.cond_value.setVisible(False)
         self.load_items()
         self.init_action()
+        qss = '''DragLabel {
+                    background: #FFFFFF;
+                }'''
+        self.setStyleSheet(qss)
 
     def set_query(self, query):
         self.cond_field.setCurrentText(query['field'])

@@ -1,6 +1,19 @@
 from elasticsearch import Elasticsearch
 
-from gui.Error import Error
+
+def build_page_query(page, query, size):
+    query['from'] = (page - 1) * size
+    if query['from'] > 10000:
+        query['from'] = 10000 - size
+    query['size'] = size
+
+
+def removeEmpty(data):
+    data2 = {}
+    for o in data:
+        if not data[o] is None:
+            data2[o] = data[o]
+    return data2
 
 
 class EsClient(object):
@@ -15,7 +28,6 @@ class EsClient(object):
     def open(self, ip, port):
         self.hostname = ip + ':' + str(port)
         self.es = Elasticsearch([{'host': ip, 'port': port}])
-
 
     def openHost(self, host):
         self.hostname = host
@@ -62,7 +74,7 @@ class EsClient(object):
         return result
 
     def search(self, index, query, page, size):
-        self.build_page_query(page, query, size)
+        build_page_query(page, query, size)
         print(query)
 
         queryData = self.es.search(
@@ -70,18 +82,12 @@ class EsClient(object):
             body=query)
 
         self.total = queryData['hits']['total']
-        if isinstance(self.total, dict):      # ES 5.7版本变更
+        if isinstance(self.total, dict):  # ES 5.7版本变更
             self.total = self.total['value']
         result = []
         for item in queryData['hits']['hits']:
             result.append(item['_source'])
         return result
-
-    def build_page_query(self, page, query, size):
-        query['from'] = (page - 1) * size
-        if query['from'] > 10000:
-            query['from'] = 10000 - size
-        query['size'] = size
 
     def ignoreNone(self, doc):
         if isinstance(doc, list):
@@ -90,12 +96,5 @@ class EsClient(object):
                 result.append(self.ignoreNone(item))
             return result
         elif isinstance(doc, dict):
-            doc = self.removeEmpty(doc)
+            doc = removeEmpty(doc)
             return doc
-
-    def removeEmpty(self, data):
-        data2 = {}
-        for o in data:
-            if not data[o] is None:
-                data2[o] = data[o]
-        return data2

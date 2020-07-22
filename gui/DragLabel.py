@@ -17,9 +17,9 @@ class DragLabel(QLabel):
         self.setText('drag field here')
         self.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         qss = '''DragLabel {
-                    height: 25px;
                     background: #FFFFFF;
                     margin: 2px 10px;
+                    padding: 2px 2px;
                     border: 1px dashed #e3e3e3;
                 }'''
         self.setStyleSheet(qss)

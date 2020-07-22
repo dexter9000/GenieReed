@@ -54,7 +54,6 @@ class GuiAction:
         es.openHost(host)
         pattern = es.scheme(index)
         tab = QueryWidget(host, index, indeies, pattern, es)
-        tab.addAllIndex([index])
         self.window.tabWidget.addTab(tab, index)
         self.window.tabWidget.setCurrentWidget(tab)
         pass

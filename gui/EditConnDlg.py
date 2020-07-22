@@ -11,15 +11,14 @@ class EditConnDlg(QDialog, Ui_Dialog):
         super(QDialog, self).__init__(parent)
         self.setupUi(self)
         self.initSetupUi()
-        self.setWindowModality(Qt.ApplicationModal)
         self.initAction()
 
     def initSetupUi(self):
         self.test_progress.setVisible(False)
+        self.setWindowModality(Qt.ApplicationModal)
 
     def initAction(self):
         self.btn_test_connect.clicked.connect(self.testConnect)
-        pass
 
     def initHost(self, name, host, port):
         self.txt_name.setText(name)
@@ -27,19 +26,17 @@ class EditConnDlg(QDialog, Ui_Dialog):
         self.txt_port.setText(str(port))
 
     def getHost(self):
-        host = {
+        return {
             "name": self.txt_name.text(),
             "host": self.txt_host.text(),
             "port": int(self.txt_port.text())
         }
-        return host
 
     def testConnect(self):
         self.test_progress.setVisible(True)
-
-        self.my_thread = SignalThread(self.testConnectFunc)
-        self.my_thread.my_signal.connect(self.testConnectSignalFn)
-        self.my_thread.start()
+        my_thread = SignalThread(self.testConnectFunc)
+        my_thread.my_signal.connect(self.testConnectSignalFn)
+        my_thread.start()
 
     def testConnectFunc(self):
         host = self.getHost()
