@@ -1,6 +1,6 @@
 import json
 
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QLabel
 
 
@@ -46,7 +46,3 @@ class DragLabel(QLabel):
     def dropEvent(self, e):
         print(json.dumps(e, default=lambda obj:obj.__dict__, sort_keys=True, indent=4))
         self.dropFn(e)
-        # position = e.pos()
-        # self.button.move(position)
-        # e.setDropAction(Qt.MoveAction)
-        # e.accept()

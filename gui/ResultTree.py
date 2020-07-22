@@ -19,7 +19,7 @@ class ResultTree(QTreeWidget):
             self.addTreeRecord(doc, tree)
 
     def addTreeRecord(self, doc, tree):
-        if (isinstance(doc, dict)):
+        if isinstance(doc, dict):
             tree.setText(0, "{doc}")
             tree.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
             tree.setText(2, 'Document')
@@ -27,7 +27,7 @@ class ResultTree(QTreeWidget):
                 self.addTreeDict(field, doc[field], tree)
 
     def addTreeDict(self, field, doc, tree):
-        if (isinstance(doc, list)):
+        if isinstance(doc, list):
             child = QTreeWidgetItem(tree)
             child.setText(0, field)
             child.setText(1, '[ ' + str(len(doc)) + ' elements ]')
@@ -36,7 +36,7 @@ class ResultTree(QTreeWidget):
                 self.addTreeDict(str(i), item, child)
             return
 
-        if (isinstance(doc, dict)):
+        if isinstance(doc, dict):
             child = QTreeWidgetItem(tree)
             child.setText(0, field)
             child.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')

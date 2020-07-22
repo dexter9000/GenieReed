@@ -11,11 +11,11 @@ class ResultTable(QTableWidget):
         for i in range(self.rowCount()):
             self.removeRow(0)
 
-        if (isinstance(result, list)):
+        if isinstance(result, list):
             if (len(result) <= 0):
                 return
             fields = self.getFields(result[0])
-        elif (isinstance(result, dict)):
+        elif isinstance(result, dict):
             fields = self.getFields(result)
 
         self.setColumnCount(len(fields))

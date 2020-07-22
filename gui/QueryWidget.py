@@ -3,12 +3,11 @@ import math
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox, QTreeWidget
+from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox
 
 from es.EsParser import EsParser
 from gui.DragLabel import DragLabel
 from gui.QueryField import QueryField
-from gui.ResultTable import ResultTable
 from gui.SignalThread import SignalThread
 from ui.ui_query_widget import Ui_QueryForm
 
@@ -53,12 +52,12 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.search_progress.setVisible(False)
 
     def updateUi(self):
-        if (self.totalPage > self.page):
+        if self.totalPage > self.page:
             self.btn_next_page.setEnabled(True)
         else:
             self.btn_next_page.setEnabled(False)
 
-        if (self.page > 1):
+        if self.page > 1:
             self.btn_pre_page.setEnabled(True)
         else:
             self.btn_pre_page.setEnabled(False)
@@ -127,10 +126,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
         if self.combo_sort.currentText() != '':
             query['sort'] = [self.combo_sort.currentText()]
         return query
-
-    def getBasicFieldQuery(self):
-
-        pass
 
     def getQueryFields(self):
         result = self.getBasicQuery()
