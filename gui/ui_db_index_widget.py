@@ -65,6 +65,7 @@ class Ui_DbIndexForm(QWidget):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/resources/icon/collection.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item.setIcon(icon)
+        item.setToolTip(collName)
         self.dbListWidget.addItem(item)
 
     def filterChange(self):

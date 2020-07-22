@@ -92,6 +92,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string notr="true"/>
+       </property>
        <property name="currentIndex">
         <number>0</number>
        </property>

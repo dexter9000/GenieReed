@@ -1,11 +1,13 @@
 from elasticsearch import Elasticsearch
 
 
-def build_page_query(page, query, size):
-    query['from'] = (page - 1) * size
-    if query['from'] > 10000:
-        query['from'] = 10000 - size
-    query['size'] = size
+def build_page_query(query, page, size):
+    if 'from' not in query:
+        query['from'] = (page - 1) * size
+        if query['from'] > 10000:
+            query['from'] = 10000 - size
+    if 'size' not in query:
+        query['size'] = size
 
 
 def removeEmpty(data):
@@ -74,7 +76,7 @@ class EsClient(object):
         return result
 
     def search(self, index, query, page, size):
-        build_page_query(page, query, size)
+        build_page_query(query, page, size)
         print(query)
 
         queryData = self.es.search(

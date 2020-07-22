@@ -44,6 +44,9 @@ class QueryField(QWidget, Ui_QueryField):
 
     def load_items(self):
         model = QStandardItemModel()
+        item = QStandardItem('match_all')
+        item.setToolTip('match_all')
+        model.appendRow(item)
         for field in self.fieldNames:
             item = QStandardItem(field)
             item.setToolTip(field)

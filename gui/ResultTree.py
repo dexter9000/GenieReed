@@ -14,13 +14,13 @@ class ResultTree(QTreeWidget):
 
     def addTreeResult(self, result):
         self.clear()
-        for doc in result:
+        for i, doc in enumerate(result):
             tree = QTreeWidgetItem(self)
-            self.addTreeRecord(doc, tree)
+            self.addTreeRecord(i, doc, tree)
 
-    def addTreeRecord(self, doc, tree):
+    def addTreeRecord(self, index, doc, tree):
         if isinstance(doc, dict):
-            tree.setText(0, "{doc}")
+            tree.setText(0, "(" + str(index) + "){doc}")
             tree.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
             tree.setText(2, 'Document')
             for field in doc:
@@ -30,6 +30,7 @@ class ResultTree(QTreeWidget):
         if isinstance(doc, list):
             child = QTreeWidgetItem(tree)
             child.setText(0, field)
+            child.setToolTip(0, field)
             child.setText(1, '[ ' + str(len(doc)) + ' elements ]')
             child.setText(2, self.getFieldType(field))
             for i, item in enumerate(doc):
@@ -39,6 +40,7 @@ class ResultTree(QTreeWidget):
         if isinstance(doc, dict):
             child = QTreeWidgetItem(tree)
             child.setText(0, field)
+            child.setToolTip(0, field)
             child.setText(1, '{ ' + str(len(doc.keys())) + ' fields }')
             child.setText(2, self.getFieldType(field))
             for field in doc:
@@ -48,7 +50,9 @@ class ResultTree(QTreeWidget):
         if doc is not None or self.isIgnoreNone:
             child = QTreeWidgetItem(tree)
             child.setText(0, field)
+            child.setToolTip(0, field)
             child.setText(1, str(doc))
+            child.setToolTip(1, str(doc))
             child.setText(2, self.getFieldType(field))
 
     def getQuery(self, e):
@@ -72,7 +76,7 @@ class ResultTree(QTreeWidget):
 
     def get_path(self, item: QTreeWidgetItem):
         paths = []
-        while item != None and item.text(0) != '{doc}':
+        while item is not None and not item.text(0).endswith('{doc}'):
             paths.insert(0, item.text(0))
             item = item.parent()
         return '.'.join(paths)

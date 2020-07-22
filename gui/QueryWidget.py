@@ -3,10 +3,11 @@ import math
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox
+from PyQt5.QtWidgets import QWidget, QMenu, QAction, QMessageBox, QHeaderView
 
 from es.EsParser import EsParser
 from gui.DragLabel import DragLabel
+from gui.FilterComboBox import FComboBox
 from gui.QueryField import QueryField
 from gui.SignalThread import SignalThread
 from ui.ui_query_widget import Ui_QueryForm
@@ -42,7 +43,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def initSetupUi(self):
         self.fieldNames = EsParser.getFullFieldNames(self.pattern)
-        self.fieldNames.insert(0, 'match_all')
         self.splitter.setStyleSheet("QSplitter::handle { background-color: white; }")
         self.btn_pre_page.setEnabled(False)
         self.btn_next_page.setEnabled(False)
@@ -50,6 +50,8 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.dragLabel = DragLabel(self.dragField)
         self.field_area_layout.addWidget(self.dragLabel)
         self.search_progress.setVisible(False)
+
+        self.tree_result.header().setSectionResizeMode(QHeaderView.ResizeToContents|QHeaderView.Custom)
 
     def updateUi(self):
         if self.totalPage > self.page:
@@ -77,10 +79,10 @@ class QueryWidget(QWidget, Ui_QueryForm):
         self.initSource()
 
     def initSource(self):
-        print('initSource')
-        # self.combo_include = FComboBox(self.group_other)
+        self.combo_include.addItems(self.fieldNames)
+        self.combo_exclude.addItems(self.fieldNames)
+        self.combo_sort.addItems(self.fieldNames)
         # self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.combo_include)
-        pass
 
     def addField(self):
         field_query_line = QueryField(self.fieldNames, self)
@@ -116,14 +118,19 @@ class QueryWidget(QWidget, Ui_QueryForm):
         return query
 
     def getBasicQuery(self):
-        query = json.loads(
-            '{"query": {"bool": {"must": [],"must_not": [],"should": []}},"_source":{"includes":[],"excludes":[]},"sort": [],"aggs": {}}')
-        if self.combo_include.currentText() != '':
-            query['_source']['includes'] = [self.combo_include.currentText()]
-        if self.combo_exclude.currentText() != '':
-            query['_source']['excludes'] = [self.combo_exclude.currentText()]
-        if self.combo_sort.currentText() != '':
-            query['sort'] = [self.combo_sort.currentText()]
+        query = {"query": {"bool": {"must": [], "must_not": [], "should": []}},
+                 "_source": {"excludes": []}, "sort": [], "aggs": {}}
+        query['_source']['includes'] = self.combo_include.selectedItems()
+        query['_source']['excludes'] = self.combo_exclude.selectedItems()
+        query['sort'] = self.getSortQuery()
+        return query
+
+    def getSortQuery(self):
+        query = []
+        fields = self.combo_sort.selectedItems()
+        sort_type = self.combo_sort_type.currentText()
+        for field in fields:
+            query.append({field: {'order': sort_type}})
         return query
 
     def getQueryFields(self):
@@ -133,10 +140,6 @@ class QueryWidget(QWidget, Ui_QueryForm):
         if len(result['query']['bool']['must']) == 0 and len(result['query']['bool']['should']) == 0:
             result['query']['bool']['should'].append({"match_all": {}})
         return result
-
-    def getBasicQuery(self):
-        return {"query": {"bool": {"must": [], "must_not": [], "should": []}},
-                "_source": {"excludes": []}, "sort": [], "aggs": {}}
 
     def initQuery(self):
         query = '{"query": {"bool": {"must": [{"match_all": {}}],"must_not": [],"should": []}},"_source":{"excludes":[]},"sort": [],"aggs": {}}'
@@ -150,6 +153,8 @@ class QueryWidget(QWidget, Ui_QueryForm):
 
     def searchFn(self):
         query = self.getQuery()
+        self.page = int(self.txt_page.text())
+        self.size = int(self.txt_size.text())
         return self.es.search(self.index, query, self.page, self.size)
 
     def searchSignalFn(self, result):
@@ -162,7 +167,7 @@ class QueryWidget(QWidget, Ui_QueryForm):
             self.page_info.setText('Document ' + str(self.page) + ' of ' + str(self.totalPage))
             self.updateUi()
         elif result['result'] == 'error':
-            QMessageBox.critical(self.window, "失败", "查询失败")
+            QMessageBox.critical(self, "失败", "查询失败")
         self.search_progress.setVisible(False)
 
     def toPrePage(self):

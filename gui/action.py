@@ -54,8 +54,16 @@ class GuiAction:
         es.openHost(host)
         pattern = es.scheme(index)
         tab = QueryWidget(host, index, indeies, pattern, es)
+
         self.window.tabWidget.addTab(tab, index)
         self.window.tabWidget.setCurrentWidget(tab)
+        self.window.tabWidget.setTabToolTip(self.window.tabWidget.currentIndex(), index)
+
+        width = self.window.tabWidget.width() - 50;
+        tabCount = self.window.tabWidget.count();
+        tabWidth = width / tabCount;
+        self.window.tabWidget.setStyleSheet("#tabWidget::tab{width:" + str(tabWidth) + "px;}");
+
         pass
 
     def initAction(self):
@@ -67,7 +75,7 @@ class GuiAction:
         result = connDlg.exec_()
         print(result)
 
-        if(result == 1):
+        if (result == 1):
             self.hostInfo = connDlg.getConnection()
             if (self.hostInfo == None):
                 return
@@ -82,11 +90,10 @@ class GuiAction:
         aboutDlg = AboutDlg()
         aboutDlg.exec_()
 
-
     def actionDebugClick(self):
         # fc = FComboBox()
         # self.window.welcomeLayout.addWidget(fc)
-        self.my_thread = SignalThread()#实例化线程对象
+        self.my_thread = SignalThread()  # 实例化线程对象
         self.my_thread.my_signal.connect(self.set_label_func)
         pass
 

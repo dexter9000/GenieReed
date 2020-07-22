@@ -145,7 +145,7 @@ class Ui_QueryForm(object):
         self.label.setMaximumSize(QtCore.QSize(70, 16777215))
         self.label.setObjectName("label")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label)
-        self.combo_include = QtWidgets.QComboBox(self.group_other)
+        self.combo_include = FComboBox(self.group_other)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -157,7 +157,7 @@ class Ui_QueryForm(object):
         self.label_2.setMaximumSize(QtCore.QSize(70, 16777215))
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_2)
-        self.combo_exclude = QtWidgets.QComboBox(self.group_other)
+        self.combo_exclude = FComboBox(self.group_other)
         self.combo_exclude.setObjectName("combo_exclude")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.combo_exclude)
         self.label_4 = QtWidgets.QLabel(self.group_other)
@@ -173,7 +173,7 @@ class Ui_QueryForm(object):
         self.combo_sort_type.addItem("")
         self.combo_sort_type.addItem("")
         self.formLayout_sort.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.combo_sort_type)
-        self.combo_sort = QtWidgets.QComboBox(self.group_other)
+        self.combo_sort = FComboBox(self.group_other)
         self.combo_sort.setObjectName("combo_sort")
         self.formLayout_sort.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.combo_sort)
         self.formLayout.setLayout(5, QtWidgets.QFormLayout.FieldRole, self.formLayout_sort)
@@ -224,6 +224,7 @@ class Ui_QueryForm(object):
         self.tree_result.header().setDefaultSectionSize(300)
         self.tree_result.header().setHighlightSections(True)
         self.tree_result.header().setMinimumSectionSize(50)
+        self.tree_result.header().setSortIndicatorShown(False)
         self.tree_result.header().setStretchLastSection(True)
         self.verticalLayout_7.addWidget(self.tree_result)
         self.tabs_result.addTab(self.tab_tree, "")
@@ -328,7 +329,7 @@ class Ui_QueryForm(object):
         self.combo_sort_type.setItemText(1, _translate("QueryForm", "desc"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_simple), _translate("QueryForm", "Basic"))
         self.tabs_result.setTabText(self.tabs_result.indexOf(self.tab_table), _translate("QueryForm", "Table"))
-        self.tree_result.setSortingEnabled(True)
+        self.tree_result.setSortingEnabled(False)
         self.tree_result.headerItem().setText(1, _translate("QueryForm", "Value"))
         self.tree_result.headerItem().setText(2, _translate("QueryForm", "Type"))
         self.tabs_result.setTabText(self.tabs_result.indexOf(self.tab_tree), _translate("QueryForm", "Tree"))
@@ -339,6 +340,7 @@ class Ui_QueryForm(object):
         self.txt_page.setText(_translate("QueryForm", "1"))
         self.txt_size.setText(_translate("QueryForm", "10"))
         self.page_info.setText(_translate("QueryForm", "Documents 1 of 1"))
+from gui.FilterComboBox import FComboBox
 from gui.ResultTable import ResultTable
 from gui.ResultTree import ResultTree
 from ui import icon_rc

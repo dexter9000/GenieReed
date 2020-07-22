@@ -315,7 +315,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="combo_include">
+                <widget class="FComboBox" name="combo_include">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -338,7 +338,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QComboBox" name="combo_exclude"/>
+                <widget class="FComboBox" name="combo_exclude"/>
                </item>
                <item row="5" column="0">
                 <widget class="QLabel" name="label_4">
@@ -382,7 +382,7 @@
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QComboBox" name="combo_sort"/>
+                  <widget class="FComboBox" name="combo_sort"/>
                  </item>
                 </layout>
                </item>
@@ -488,7 +488,7 @@
                  <bool>false</bool>
                 </property>
                 <property name="sortingEnabled">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="wordWrap">
                  <bool>true</bool>
@@ -504,6 +504,9 @@
                 </attribute>
                 <attribute name="headerHighlightSections">
                  <bool>true</bool>
+                </attribute>
+                <attribute name="headerShowSortIndicator" stdset="0">
+                 <bool>false</bool>
                 </attribute>
                 <attribute name="headerStretchLastSection">
                  <bool>true</bool>
@@ -747,6 +750,11 @@
    <class>ResultTable</class>
    <extends>QTableWidget</extends>
    <header location="global">gui/ResultTable.h</header>
+  </customwidget>
+  <customwidget>
+   <class>FComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">gui/FilterComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

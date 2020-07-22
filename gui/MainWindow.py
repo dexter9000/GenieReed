@@ -50,4 +50,3 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.es.open(self.hostInfo['host'], self.hostInfo['port'])
 
         self.action.loadIndex(self.es)
-        # QMessageBox.information(self, "温馨提示", "数据库连接成功！", QMessageBox.Yes, QMessageBox.Yes)

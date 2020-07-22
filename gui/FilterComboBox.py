@@ -95,16 +95,6 @@ class FComboBox(QComboBox):
     def setupUi(self):
         self.pListWidget = QListWidget(self)
         self.pLineEdit = QLineEdit(self)
-        for i in range(5):
-            self.addItem(str(i))
-            # pItem = QListWidgetItem(pListWidget)
-            # pListWidget.addItem(pItem)
-            # pItem.setData(Qt.UserRole, i)
-            # pCheckBox = QCheckBox(self)
-            # pCheckBox.setText(str(i))
-            # pListWidget.addItem(pItem)
-            # pListWidget.setItemWidget(pItem, pCheckBox)
-            # connect(pCheckBox, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)))
 
         self.setModel(self.pListWidget.model())
         self.setView(self.pListWidget)
@@ -113,6 +103,10 @@ class FComboBox(QComboBox):
         # pLineEdit.setReadOnly(True)
         self.pListWidget.itemClicked.connect(self.selectClick)
         self.pLineEdit.textChanged.connect(self.textChanged)
+
+    def addItems(self, items):
+        for item in items:
+            self.addItem(item)
 
     def addItem(self, text):
         pItem = QListWidgetItem(self.pListWidget)
@@ -145,6 +139,9 @@ class FComboBox(QComboBox):
     def textChanged(self, p_str):
         pass
 
-    def filterItems(self, text):
-
-        pass
+    def selectedItems(self):
+        txt = self.pLineEdit.text()
+        if txt == '':
+            return []
+        else:
+            return txt.split(',')
