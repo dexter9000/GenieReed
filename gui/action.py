@@ -5,7 +5,7 @@ from gui.AboutDlg import AboutDlg
 from gui.ConnDlg import ConnDlg
 from gui.QueryWidget import QueryWidget
 from gui.SignalThread import SignalThread
-from gui.ui_db_index_widget import Ui_DbIndexForm
+from gui.DbIndexList import DbIndexForm
 
 
 class GuiAction:
@@ -21,26 +21,25 @@ class GuiAction:
         my_thread.my_signal.connect(self.loadIndexSignalFn)
         my_thread.start()
 
-    def addIndexItem(self, host, result):
+    def add_index_item(self, host, result):
         self.window.dbWidgets = []
         self.window.dbLists = []
-        newDbWidget = Ui_DbIndexForm(self, host)
-        self.window.dbWidgets.append(newDbWidget)
-        self.window.dbList.addItem(newDbWidget, host)
+        new_db_widget = DbIndexForm(self, host)
+        self.window.dbWidgets.append(new_db_widget)
+        self.window.dbList.addItem(new_db_widget, host)
         self.window.dbList.setCurrentIndex(self.window.dbList.count() - 1)
         for item in result:
-            newDbWidget.addColl(item)
+            new_db_widget.addColl(item)
 
     def loadIndexFunc(self):
         return self.es.indices()
 
     def loadIndexSignalFn(self, result):
         if result['result'] == 'succ':
-            self.addIndexItem(self.es.getHost(), result['data'])
+            self.add_index_item(self.es.getHost(), result['data'])
             self.showMessage("Total Index : " + str(len(result['data'])))
         elif result['result'] == 'error':
             QMessageBox.critical(self.window, "失败", "连接失败")
-        # self.test_progress.setVisible(False)
 
     def showMessage(self, message):
         self.window.statusBar().showMessage(message)
@@ -77,12 +76,9 @@ class GuiAction:
 
         if (result == 1):
             self.hostInfo = connDlg.getConnection()
-            if (self.hostInfo == None):
-                return
-
+            if self.hostInfo is None: return
             self.es = EsClient()
             self.es.open(self.hostInfo['host'], self.hostInfo['port'])
-
             self.loadIndex()
             # QMessageBox.information(self, "温馨提示", "数据库连接成功！", QMessageBox.Yes, QMessageBox.Yes)
 

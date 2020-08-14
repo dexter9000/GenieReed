@@ -48,7 +48,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QToolBox" name="dbList">
+      <widget class="QWidget" name="dbGroup" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>4</horstretch>
@@ -67,23 +67,31 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="dbWidget">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>132</width>
-          <height>445</height>
-         </rect>
-        </property>
-        <attribute name="label">
-         <string>Host</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3"/>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QToolBox" name="dbList">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="host">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>205</width>
+             <height>191</height>
+            </rect>
+           </property>
+           <attribute name="label">
+            <string>Host</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="DbTree" name="dbTreeWidget"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="sizePolicy">
@@ -215,7 +223,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>892</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -315,6 +323,13 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DbTree</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">gui/DbTree.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icon_rc.qrc"/>
  </resources>
