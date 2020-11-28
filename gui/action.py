@@ -21,10 +21,10 @@ class GuiAction:
         my_thread.my_signal.connect(self.loadIndexSignalFn)
         my_thread.start()
 
-    def add_index_item(self, host, result):
+    def add_index_item(self, host, username, password, result):
         self.window.dbWidgets = []
         self.window.dbLists = []
-        new_db_widget = DbIndexForm(self, host)
+        new_db_widget = DbIndexForm(self, host, username, password)
         self.window.dbWidgets.append(new_db_widget)
         self.window.dbList.addItem(new_db_widget, host)
         self.window.dbList.setCurrentIndex(self.window.dbList.count() - 1)
@@ -36,7 +36,7 @@ class GuiAction:
 
     def loadIndexSignalFn(self, result):
         if result['result'] == 'succ':
-            self.add_index_item(self.es.getHost(), result['data'])
+            self.add_index_item(self.es.getHost(), self.es.getUsername(), self.es.getPassword(), result['data'])
             self.showMessage("Total Index : " + str(len(result['data'])))
         elif result['result'] == 'error':
             QMessageBox.critical(self.window, "失败", "连接失败")
@@ -44,13 +44,13 @@ class GuiAction:
     def showMessage(self, message):
         self.window.statusBar().showMessage(message)
 
-    def selectIndex(self, host, index, indeies):
-        self.addNewQueryTab(host, index, indeies)
+    def selectIndex(self, host, username, password, index, indeies):
+        self.addNewQueryTab(host, username, password, index, indeies)
         pass
 
-    def addNewQueryTab(self, host, index, indeies):
+    def addNewQueryTab(self, host, username, password, index, indeies):
         es = EsClient()
-        es.openHost(host)
+        es.openHost(host, username, password)
         pattern = es.scheme(index)
         tab = QueryWidget(host, index, indeies, pattern, es)
 
@@ -78,7 +78,10 @@ class GuiAction:
             self.hostInfo = connDlg.getConnection()
             if self.hostInfo is None: return
             self.es = EsClient()
-            self.es.open(self.hostInfo['host'], self.hostInfo['port'])
+            if not 'username' in self.hostInfo or not 'password' in self.hostInfo:
+                self.es.open(self.hostInfo['host'], self.hostInfo['port'], None, None)
+            else:
+                self.es.open(self.hostInfo['host'], self.hostInfo['port'], self.hostInfo['username'], self.hostInfo['password'])
             self.loadIndex()
             # QMessageBox.information(self, "温馨提示", "数据库连接成功！", QMessageBox.Yes, QMessageBox.Yes)
 

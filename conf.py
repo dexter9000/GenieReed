@@ -33,6 +33,9 @@ class Config:
     def set(self, path, json_obj):
         self.config_json[path] = json_obj
 
+    def get_list_item(self, path, index):
+        return self.config_json[path][index]
+
     def add_list_item(self, path, json_obj):
         if self.config_json[path] is None:
             self.config_json[path] = []

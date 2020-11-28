@@ -22,22 +22,36 @@ class EsClient(object):
 
     def __init__(self):
         self.hostname = ''
+        self.username = ''
+        self.password = ''
         self.es = None
         self.version = '1'
         self.total = 0
         pass
 
-    def open(self, ip, port):
+    def open(self, ip, port, username, password):
         self.hostname = ip + ':' + str(port)
-        self.es = Elasticsearch([{'host': ip, 'port': port}])
+        self.username = username
+        self.password = password
 
-    def openHost(self, host):
+        if not username or not password:
+            self.es = Elasticsearch([{'host': ip, 'port': port}])
+        else:
+            self.es = Elasticsearch([{'host': ip, 'port': port, 'http_auth': (username, password)}])
+
+    def openHost(self, host, username, password):
         self.hostname = host
-        strs = host.split(':')
-        self.es = Elasticsearch([{'host': strs[0], 'port': strs[1]}])
+        self.username = username
+        self.password = password
 
-    def testHost(self, host):
-        self.openHost(host)
+        strs = host.split(':')
+        if not username or not password:
+            self.es = Elasticsearch([{'host': strs[0], 'port': strs[1]}])
+        else:
+            self.es = Elasticsearch([{'host': strs[0], 'port': strs[1], 'http_auth': (username, password)}])
+
+    def testHost(self, host, username, password):
+        self.openHost(host, username, password)
         print(self.es.info())
 
     def indices(self):
@@ -55,6 +69,12 @@ class EsClient(object):
 
     def getHost(self):
         return self.hostname
+
+    def getUsername(self):
+        return self.username
+
+    def getPassword(self):
+        return self.password
 
     def getFieldName(self, index):
         doc = self.es.indices.get(index)

@@ -30,43 +30,36 @@ class ConnDlg(QDialog, Ui_ConnDlg):
         self.tableWidget.selectRow(0)
 
     def selectHost(self):
-        list = self.tableWidget.selectedItems()
-        self.selectedHost = {
-            "name": list[0].text(),
-            "host": list[1].text(),
-            "port": int(list[2].text())
-        }
-        return self.selectedHost
+        items = self.tableWidget.selectedItems()
+        if len(items) == 0:
+            return None
+        return self.config.get_list_item('connections', items[0].row())
 
     def getConnection(self):
-        self.selectHost()
-        return self.selectedHost
+        return self.selectHost()
 
     def addRow(self):
         rowNum = self.tableWidget.rowCount()
         self.tableWidget.insertRow(rowNum)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setItem(rowNum, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setItem(rowNum, 1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setItem(rowNum, 2, item)
+        self.tableWidget.setItem(rowNum, 0, QtWidgets.QTableWidgetItem())
+        self.tableWidget.setItem(rowNum, 1, QtWidgets.QTableWidgetItem())
+        self.tableWidget.setItem(rowNum, 2, QtWidgets.QTableWidgetItem())
         return rowNum
 
     def addNewHost(self, host):
         rowIndex = self.addRow()
-        item = self.tableWidget.item(rowIndex, 0)
-        item.setText(host['name'])
-        item = self.tableWidget.item(rowIndex, 1)
-        item.setText(host['host'])
-        item = self.tableWidget.item(rowIndex, 2)
-        item.setText(str(host['port']))
+        self.tableWidget.item(rowIndex, 0).setText(host['name'])
+        self.tableWidget.item(rowIndex, 1).setText(host['host'])
+        self.tableWidget.item(rowIndex, 2).setText(str(host['port']))
 
     def saveNewHost(self, host):
         self.config.add_list_item('connections', host)
         self.config.save_config()
 
     def delRow(self):
+        items =self.tableWidget.selectedItems()
+        if len(items) == 0:
+            return
         item = self.tableWidget.selectedItems()[0]
         row = self.tableWidget.row(item)
         self.tableWidget.removeRow(row)
@@ -86,7 +79,9 @@ class ConnDlg(QDialog, Ui_ConnDlg):
 
     def openEditConnDlg(self):
         host = self.selectHost()
+        if host is None:
+            return
         editConnDlg = EditConnDlg()
-        editConnDlg.initHost(host['name'], host['host'], host['port'])
+        editConnDlg.initHost(host['name'], host['host'], host['port'], host['username'], host['password'])
         editConnDlg.exec_()
         pass

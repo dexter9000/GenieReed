@@ -20,16 +20,20 @@ class EditConnDlg(QDialog, Ui_Dialog):
     def initAction(self):
         self.btn_test_connect.clicked.connect(self.testConnect)
 
-    def initHost(self, name, host, port):
+    def initHost(self, name, host, port, username, password):
         self.txt_name.setText(name)
         self.txt_host.setText(host)
         self.txt_port.setText(str(port))
+        self.txt_username.setText(username)
+        self.txt_password.setText(password)
 
     def getHost(self):
         return {
             "name": self.txt_name.text(),
             "host": self.txt_host.text(),
-            "port": int(self.txt_port.text())
+            "port": int(self.txt_port.text()),
+            "username": self.txt_username.text(),
+            "password": self.txt_password.text()
         }
 
     def testConnect(self):
@@ -41,7 +45,7 @@ class EditConnDlg(QDialog, Ui_Dialog):
     def testConnectFunc(self):
         host = self.getHost()
         es = EsClient()
-        es.testHost(host['host'] + ':' + str(host['port']))
+        es.testHost(host['host'] + ':' + str(host['port']), str(host['username']), str(host['password']))
 
     def testConnectSignalFn(self, result):
         print(result)

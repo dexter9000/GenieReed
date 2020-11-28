@@ -6,11 +6,13 @@ from PyQt5.QtWidgets import QMenu, QAction, QWidget
 
 class DbIndexForm(QWidget):
 
-    def __init__(self, action, host, parent=None):
+    def __init__(self, action, host, username, password, parent=None):
         super(QWidget, self).__init__(parent)
         self.setupUi(self)
         self.action = action
         self.host = host
+        self.username = username
+        self.password = password
         self.indeies = []
         self.initAction()
 
@@ -64,6 +66,4 @@ class DbIndexForm(QWidget):
 
     def selectIndex(self):
         index = self.dbListWidget.currentItem().text()
-
-        self.action.selectIndex(self.host, index, self.indeies)
-        pass
+        self.action.selectIndex(self.host, self.username, self.password, index, self.indeies)
